@@ -1,0 +1,93 @@
+CREATE TABLE `hotelowner`(
+  `username` varchar(50) NOT NULL PRIMARY KEY,
+  `email` varchar(50) NOT NULL,
+  `password` varchar(10) NOT NULL
+ )ENGINE=InnoDB DEFAULT CHARSET=latin1; 
+
+CREATE TABLE `hotel`(
+  `hotelname` varchar(50) NOT NULL PRIMARY KEY,
+  `owner_username` varchar(50) NOT NULL,
+  `location` varchar(20) NOT NULL,
+  `stars` int(5) NOT NULL,
+  `rating` decimal(5) NOT NULL
+ )ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+ALTER TABLE hotel ADD FOREIGN KEY (owner_username) REFERENCES hotelowner(username);
+
+CREATE TABLE `hotelrooms`(
+  `room_no` int(5) NOT NULL,
+  `hotelname` varchar(50) NOT NULL,
+  `type` varchar(10) NOT NULL,
+  `price` decimal(11) NOT NULL,
+  `image` longblob NOT NULL,
+  `facilities` varchar(200) NOT NULL,
+  PRIMARY KEY(room_no,hotelname)
+ )ENGINE=InnoDB DEFAULT CHARSET=latin1; 
+
+ALTER TABLE hotelrooms ADD FOREIGN KEY (hotelname) REFERENCES hotel(hotelname);
+
+CREATE TABLE `customers`(
+  `ssn` int(11) NOT NULL PRIMARY KEY,
+  `username` varchar(50) NOT NULL,
+  `email` varchar(50) NOT NULL,
+  `password` varchar(10) NOT NULL
+  )ENGINE=InnoDB DEFAULT CHARSET=latin1; 
+
+CREATE TABLE `cust_reservation`(
+  `cust_ssn` int(11) NOT NULL ,
+  `hotelname` varchar(50) NOT NULL,
+  `room_no` int(5) NOT NULL,
+  `start_date` date NOT NULL,
+  `end_date` date NOT NULL,
+  PRIMARY KEY(cust_ssn,hotelname,room_no)
+ )ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+ALTER TABLE cust_reservation ADD FOREIGN KEY (hotelname) REFERENCES hotel(hotelname);
+ALTER TABLE cust_reservation ADD FOREIGN KEY (cust_ssn) REFERENCES customers(ssn);
+ALTER TABLE cust_reservation ADD FOREIGN KEY (room_no) REFERENCES hotelrooms(room_no);
+  
+
+CREATE TABLE `hotel_reservation`(
+  `hotelname` varchar(50) NOT NULL,
+  `room_no` int(5) NOT NULL,
+  `start_date` date NOT NULL,
+  `end_date` date NOT NULL,
+  PRIMARY KEY(hotelname,room_no)
+ )ENGINE=InnoDB DEFAULT CHARSET=latin1; 
+
+ALTER TABLE hotel_reservation ADD FOREIGN KEY (hotelname) REFERENCES hotel(hotelname);
+ALTER TABLE hotel_reservation ADD FOREIGN KEY (room_no) REFERENCES hotelrooms(room_no); 
+     
+
+ALTER TABLE `hotel` ADD `approval` BOOLEAN NULL DEFAULT NULL AFTER `rating`;
+
+
+
+
+
+
+
+$user_check_query = "SELECT * FROM hotel WHERE hname='$hname'  LIMIT 1";
+$query = "INSERT INTO hotel ( hotelname,ownername, location,stars) 
+  			  VALUES( '$hname','$username','$location' , '$stars')";
+$query = "INSERT INTO hotelrooms ( hotelname,type, price,facilities,image) 
+  			  VALUES( '$hname','$type', '$price','$facilities','$image')";
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
